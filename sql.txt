@@ -1,0 +1,19 @@
+mysql --host=192.168.10.150 --port=3306 --user=dac32 --password=welcome
+
+(select char_length(ename) from emp where char_length(ename)<(select max(char_length(ename)) from emp) order by char_length(ename)desc limit 1);
+
+
+select (select char_length(ename) from emp order by char_length(ename) desc limit 1)- (select char_length(ename) from emp where char_length(ename)<(select max(char_length(ename)) from emp) order by char_length(ename)desc limit 1);
+
+class test
+{ 
+  public static void main(String[] args)
+ {
+  int i=0;
+   for( i=0;i++<11;)
+    {
+     System.out.print(i+" ");
+     }
+ }
+
+}
