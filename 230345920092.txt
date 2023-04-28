@@ -1,0 +1,49 @@
+PRN NO. 230345920092
+SECTION-1
+1) select * from (select *, mod(row_number() over(),2)r1 from emp)t1 where r1=0;
+2) select distinct sal from emp order by sal desc limit 2,1;
+3) select ename,job,sal from emp where sal >( select sal from emp where ename='smith');
+4) select * from (select *,extract(year from hiredate)r1 from emp)t where r1=1981;
+5) select * from emp inner join dept on (emp.deptno=dept.deptno) where job="manager" and dname="sales";
+6) select ename,empno,job,sal from emp where (sal+comm) between 1000 and 2000;
+7) select distinct ename,job,dname from emp inner join dept on (emp.deptno=dept.deptno)=30 or 40 and job!='manager';
+8)select * from emp where ename like 'A%' or 'M%';
+9)
+10) select ename from emp inner join emp_cards on (emp.empno=emp_cards.empid) where emp_cards.name=null;
+
+
+SECTION-2
+1)
+    drop table if exists login;
+    create table login;
+    drop procedure if exists addUser;
+     delimiter $
+
+       create procedure addUser(_username varchar(50),_password varchar(50),_email varchar(50))
+        BEGIN
+        insert into addUser values(_username,_password,_email);
+	 select * from addUser;
+        end $
+
+   delimiter ;
+
+
+2)   
+    drop table if exists LOG;
+    create table LOG;
+    drop procedure if exists checkUser;
+    delimiter $
+
+     create PROCEDURE checkUser(_email VARCHAR(50))
+
+    BEGIN
+        if EXISTS(SELECT * from login where email=_email) THEN
+	
+	SELECT username, password from login where email=_email;
+	
+	ELSE
+	insert into log(curr_date, curr_time,message) values(curdate(),curtime(),'HELlo kuch kam kerlo');
+	 select * from checkUser;
+	end if; 
+    end $
+   delimiter ;

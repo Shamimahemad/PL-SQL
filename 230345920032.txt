@@ -1,0 +1,88 @@
+-------------------------------------------------------------------------------------------------
+SECTION 1 :
+-------------------------------------------------------------------------------------------------
+
+Que 1.  select deptno from dept where deptno not in(select deptno from emp);
+
+Que 2.  select * from emp inner join emp_cards on emp.empno=emp_cards.empid;
+
+Que 3.  select * from emp where comm is null and sal<3000;
+
+Que 4.  select deptno from emp group by deptno order by count(*) limit 1;
+
+Que 5.  select ename,job,sal from emp where job='clerk' or job='analyst' and sal not in(1000,3000,5000);
+
+Que 6.  select (select count(*) from ord where status='shipped')-(select count(*) from ord where status='cancelled')difference;
+
+Que 7.  select left(`user name`,1) from emp;
+
+Que 8.  select * from emp where isActive;
+
+Que 9.  select e.ename,m.ename from emp e,emp m where e.mgr=m.empno;
+
+Que 10. select * from emp where sal>(select sal from emp where ename='MARTIN');
+
+
+
+-------------------------------------------------------------------------------------------------
+SECTION 2 :
+-------------------------------------------------------------------------------------------------
+
+Que 1. 
+         drop table if exists deptLOG;              #delete the table if exists already..
+         drop trigger if exists insertDEPT;         #delete the trigger if exists already..
+ 
+         delimiter $  
+                    #created table with given specifications..where id is primary key and auto_incremented,current date and time as input with the message and values inserted in table dept.
+                    CREATE TABLE deptLOG(id int primary KEY auto_increment,cDAte date,
+                                          cTime TIME,message varchar(60),deptno int,
+                                         dname varchar(40),loc VARCHAR(40),pwd VARCHAR(40));
+					 
+                    #This trigger will activated when anyone insert data in dept table.
+
+                    CREATE TRIGGER insertDEPT AFTER INSERT on dept for each ROW
+
+                    BEGIN 
+                          # insert the values in deptLOG table  
+
+                          INSERT into deptLOG values(DEFAULT,curdate(),curtime(),'data INSERT',
+                                                    new.deptno,new.dname,new.loc,new.pwd);
+                    end $
+         delimiter ; 
+
+
+
+Que 2.   #delete function if alredy exist to avoide error for next time when we compile this function.
+         
+         Drop function if exists sumSalary;
+         delimiter $
+         
+         #function will take deptno as input and returns an interger value which is the sum of salary for that specific dept
+         
+         create function sumSalary(_deptno int) returns INTEGER
+
+         DETERMINISTIC
+         BEGIN 
+               #here declared a integer variable so that it will carry the sum of salary to return. 
+               DECLARE s int;
+	       
+               #Before calculating sum here we are checking is the given deptno really exists in the dept table or not if yes the calculate sum.
+	       IF EXISTS(SELECT deptno from emp where deptno=_deptno) THEN
+	                                        
+                                                #here setting the value for variable s which is nothing but sum of sal from dept-->_deptno.
+						set s = (select sum(sal) from emp where deptno=_deptno);
+	                    RETURN s;
+	 
+	       ELSE
+                            #inside else so deptno is not found in emp table...return will display the message"Department not found!".
+	                    RETURN (SELECT "Department not found!");
+	       end if;
+	 
+         end $
+         delimiter ;
+
+
+
+
+
+
